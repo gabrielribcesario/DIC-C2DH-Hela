@@ -1,0 +1,44 @@
+#!/bin/bash
+
+fetch_data() {
+    URL="$1"
+    DIR="$2"
+    mkdir -p $DIR
+    if [ ! -f "downloads/$DIR.zip" ]; then # if file has been downloaded before
+        wget $URL -O "downloads/$DIR.zip"
+    fi
+    unzip "downloads/$DIR.zip" -d "$DIR"
+    mv "$DIR/DIC-C2DH-HeLa/"* "$DIR" &> /dev/null # move dirs one level up
+    rm -r "$DIR/DIC-C2DH-HeLa"
+}
+
+
+cd "$(dirname "$0")"/..
+mkdir -p downloads
+
+# Retrieve training dataset
+TRAIN_URL="http://data.celltrackingchallenge.net/training-datasets/DIC-C2DH-HeLa.zip"
+TRAIN_DIR="DIC-C2DH-HeLa-Train"
+fetch_data "$TRAIN_URL" "$TRAIN_DIR"
+mkdir -p "$TRAIN_DIR/01_RES" "$TRAIN_DIR/02_RES"
+
+# Retrieve test dataset (if requested, use remote location if not)
+if [[ $1 -ne 0 ]]; then
+    TEST_URL="http://data.celltrackingchallenge.net/test-datasets/DIC-C2DH-HeLa.zip"
+    TEST_DIR="DIC-C2DH-HeLa"
+    fetch_data "$TEST_URL" "$TEST_DIR"
+    mkdir -p "$TEST_DIR/01_RES" "$TEST_DIR/02_RES"
+fi
+
+mkdir -p TFData/TFCache
+
+# Setup conda env
+ENV="hela"
+source "$(conda info --base)"/etc/profile.d/conda.sh
+if ! conda list --name "$ENV" &> /dev/null; then # check if it exists
+    conda env create --file=environment.yml -n "$ENV"
+fi
+conda activate "$ENV"
+
+cd bin
+python -m create_tfrecord
