@@ -275,6 +275,7 @@ dependencies:
       - ml-dtypes==0.4.1
       - mlcroissant==1.0.18
       - namex==0.0.8
+      - natsort==8.4.0
       - numpy==2.0.2
       - nvidia-cublas-cu12==12.5.3.2
       - nvidia-cuda-cupti-cu12==12.5.82

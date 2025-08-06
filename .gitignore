@@ -1,10 +1,16 @@
-/**/.vscode
-/**/__pycache__
-/**/.ipynb_checkpoints
+# Miscellaneous
+/**/.vscode/
+/**/__pycache__/
+/**/.ipynb_checkpoints/
 
+# Datasets and Tensorflow models
 /DIC-C2DH-HeLa*/
-/TFData
-/models
-/downloads
+/TFData/
+/models/
+/downloads/
 
-/HeLa/
+# Checkpoint files
+/**/helper
+
+# Model predictions and what not
+/Predictions/
