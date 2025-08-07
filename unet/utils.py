@@ -29,7 +29,7 @@ class UNetHelper:
         self.model = tf.keras.models.Sequential([tf.keras.layers.Input(shape=input_shape), 
                                                  UNet(2, **kwargs)])
         self.checkpoint = tf.train.Checkpoint(self.model)
-        self.checkpoint_dir = "./models/ckpt/"
+        self.checkpoint_dir = "ckpt/"
 
     @tf.function
     def train_step(self, inputs):

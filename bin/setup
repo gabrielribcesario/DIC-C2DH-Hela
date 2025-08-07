@@ -14,7 +14,7 @@ fetch_data() {
     rm -r "$DIR/DIC-C2DH-HeLa"
 }
 
-OPTS=$(getopt -o '' --long train:,test:,fetch -n 'setup' -- "$@")
+OPTS=$(getopt -o '' --long train:,test:,fetch,help -n 'setup' -- "$@")
 if [ $? -ne 0 ]; then
     echo "Internal error! Failure to get optional arguments." >&2
     exit 1
@@ -25,6 +25,7 @@ eval set -- "$OPTS"
 TRAIN_DIR="DIC-C2DH-HeLa-Train"
 TEST_DIR="DIC-C2DH-HeLa"
 DOWNLOAD=false
+HELP=false
 
 while true; do
     case "$1" in
@@ -40,6 +41,10 @@ while true; do
             DOWNLOAD=true
             shift
             ;;
+        --help) 
+            HELP=true
+            shift
+            ;;
         --)
             shift
             break
@@ -50,6 +55,14 @@ while true; do
             ;;
     esac
 done
+
+if [ "$HELP" = true ]; then
+    echo "setup [--train path] [--test path] [--help]:"
+    echo "  --train        Path to the training dataset directory with CTC folder structure"
+    echo "  --test         Path to the test dataset directory with CTC folder structure"
+    echo "  --fetch        Download the DIC-C2Dh-HeLa dataset from the CTC site"
+    exit 0
+fi
 
 cd ..
 
@@ -75,7 +88,7 @@ conda activate "$ENV"
 
 # Create Tensorflow dataset
 TF_DIR=TFData
-mkdir -p $TF_DIR/TFCache
+mkdir -p $TF_DIR/TFCache $TF_DIR/models
 cd bin
 # Re-running tfds for the same dataset will trigger an error
 # and I'm just too lazy to write actual error handling
