@@ -10,7 +10,4 @@
 /downloads/
 
 # Checkpoint files
-/**/helper
-
-# Model predictions and what not
-/Predictions/
+/**/ckpt/
